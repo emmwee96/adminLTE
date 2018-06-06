@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteBase    /adminlte/
+RewriteCond $1 !^(index\.php|images|files|css|js|fonts|robots\.txt)
+RewriteRule ^(.*)$ /adminlte/index.php/$1 [L]
