@@ -6,11 +6,7 @@ class Base_Controller extends CI_Controller
     function __construct()
     {
         parent::__construct();
-        
-//        if (!$this->session->has_userdata("login_data") and strtolower($this->uri->segment(1)) != "access") redirect("access/login", "refresh");
-        $this->pageData = array(
-            "tagTypes" => $this->Tag_type_model->get_all()
-        );
+
     }
 
     function hash($password)
@@ -71,6 +67,44 @@ class Base_Controller extends CI_Controller
         if (empty($array)) show_404();
     }
 
+    function multi_image_upload($files, $field_name, $path)
+    {
+
+        $files_count = count($files[$field_name]['name']);
+
+        $urls = array();
+
+        $error = false;
+        for ($i = 0; $i < $files_count; $i++) {
+
+            if ($error) die($error_message);
+
+            $_FILES["image"]['name'] = $files[$field_name]['name'][$i];
+            $_FILES["image"]['type'] = $files[$field_name]['type'][$i];
+            $_FILES["image"]['tmp_name'] = $files[$field_name]['tmp_name'][$i];
+            $_FILES["image"]['error'] = $files[$field_name]['error'][$i];
+            $_FILES["image"]['size'] = $files[$field_name]['size'][$i];
+
+            $config = array(
+                "allowed_types" => "gif|png|jpg|jpeg",
+                "upload_path" => "./images/" . $path . "/",
+                "path" => "/images/" . $path . "/"
+            );
+
+            $this->load->library("upload", $config);
+
+            if ($this->upload->do_upload("image")) {
+                $url = $config['path'] . $this->upload->data()['file_name'];
+
+                array_push($urls, $url);
+            } else {
+                $error = true;
+                $error_message = $this->upload->display_errors();
+            }
+        }
+
+        return $urls;
+    }
 }
 
 ?>

@@ -142,6 +142,24 @@ class Base_Model extends CI_Model
         $this->db->update($this->table_name, $data);
     }
 
+    function hard_delete($primary_key)
+    {
+        $this->db->where($this->primary_key, $primary_key);
+        $this->db->delete($this->table_name);
+    }
+
+    function soft_delete_where($where)
+    {
+        $this->db->where($where);
+        $this->db->update($this->table_name, $data);
+    }
+
+    function hard_delete_where($where)
+    {
+        $this->db->where($where);
+        $this->db->delete($this->table_name);
+    }
+
     function login($username, $password)
     {
 
